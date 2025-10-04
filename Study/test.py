@@ -1,3 +1,17 @@
+import random
+import time
+import math
+class Random:
+    def random_number(self, start, end):
+        return random.randint(start, end)
+rand = Random()
+print("Random number between 1 and 10:", rand.random_number(1, 10))
+time.sleep(1)
+print("Random number between 20 and 30:", rand.random_number(20, 30))
+time.sleep(1)
+print("Random number between 100 and 200:", rand.random_number(100, 200))
+
+
 '''
 print("Can we go outside today?")
 weather = input("Enter the weather (sunny, rainy, snowy, windy): ").strip().lower()
@@ -216,15 +230,17 @@ print("The length of the rectangle is:", length, "and the width is:", width, "so
     result = dividend / divisor
     return result
 divisor_value = float(input("Enter the divisor: ").strip())
-dividend_value = float(input("Enter the dividend: ").strip())
+dividend_value = float(input("Enter the dividend: ").strip()
 division_result = calculate_division(divisor_value, dividend_value)
 print("The result of the division is:", division_result)'''
 
-def azy_begadang():
+'''def azy_begadang():
     if begadang is True:
         return "Azy butuh tidur 24 jam"
     if begadang is False:
         return "Azy ga butuh tidur"
+        
+# Test change to trigger Git detection
 begadang_apa_ngga = input("Azy begadang? (True/False): ").strip().lower()
 begadang = begadang_apa_ngga.startswith('y') or begadang_apa_ngga.startswith('t')
-print(azy_begadang())
+print(azy_begadang())'''
