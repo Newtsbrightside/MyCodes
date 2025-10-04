@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="stats-container">
+            <div class="stat-box">
+                <h3>TOTAL TASKS</h3>
+                <p id="total-tasks" class="stat-number teal">0</p>
+                <i class="fa-solid fa-list-check teal"></i>
+            </div>
+            <div class="stat-box">
+                <h3>COMPLETED</h3>
+                <p id="completed-tasks" class="stat-number green">0</p>
+                <i class="fa-solid fa-circle-check green"></i>
+            </div>
+            <div class="stat-box">
+                <h3>PENDING</h3>
+                <p id="pending-tasks" class="stat-number amber">0</p>
+                <i class="fa-solid fa-clock amber"></i>
+            </div>
+            <div class="stat-box">
+                <h3>PROGRESS</h3>
+                <p id="progress" class="stat-number blue">0%</p>
+                <i class="fa-solid fa-chart-line blue"></i>
+            </div>
+        </div>
+
+        <div class="progress-bar-container">
+            <div id="progress-bar" class="progress-bar" style="width: 0%;"></div>
+        </div>
+
+        <div class="input-row">
+            <div class="input-group">
+                <input type="text" id="taskInput" placeholder="Add a todo...">
+            </div>
+            <div class="input-group">
+                <input type="date" id="dateInput">
+            </div>
+            <button id="addBtn" class="circle-btn">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+        </div>
+
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search tasks... (Ctrl+F)">
+            </div>
+            <button id="filterBtn" class="filter-btn">
+                <i class="fa-solid fa-filter"></i> FILTER
+            </button>
+        </div>
+
+        <div class="table-header">
+            <div class="header-row">
+                <div class="sort-btn" id="sortBtn">
+                    <i class="fa-solid fa-sort"></i> SORT
+                </div>
+                <div class="column task">TASK</div>
+                <div class="column due-date">DUE DATE</div>
+                <div class="column status">STATUS</div>
+                <div class="column actions">ACTIONS</div>
+            </div>
+            <button id="deleteAllBtn" class="delete-all-btn">
+                <i class="fa-solid fa-trash"></i> DELETE ALL
+            </button>
+        </div>
+
+        <div id="taskList" class="task-list">
+            <!-- Tasks will be added here -->
+            <div class="no-tasks" id="noTasks">No tasks found</div>
+        </div>
+
+        <div class="footer">
+            Made with ❤️ by Yunus Zulfikar
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>

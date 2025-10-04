@@ -1,0 +1,22 @@
+
+# Added after cleanup
+blipenv/
+venv/
+.venv/
+model_cache/
+hf_cache/
+**/*.safetensors
+**/*.safetensors.index.json
+**/*.bin
+**/*.pt
+**/*.onnx
+*.ipynb
+output_folder/
+*.log
+.DS_Store
+Thumbs.db
+*.tmp
+/generated_image.png
+linkedinglearn_linal/
+Programming_Fundamentals/
+Hugging_Face/

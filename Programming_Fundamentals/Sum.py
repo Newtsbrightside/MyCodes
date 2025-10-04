@@ -1,0 +1,13 @@
+#Sum Calculator
+print("This program calculates the sum of all numbers between two integers you enter.")
+print("For example, if you enter 3 and 5, it will calculate 3 + 4 + 5.")
+print("Let's try it out!")
+print("="*50)
+a = int(input("Enter first number: "))
+b = int(input("Enter second number: "))
+start = min(a, b)
+end = max(a, b)
+total = sum(range(start, end + 1))
+print(f"The sum of numbers from {start} to {end} is: {total}")
+print("="*50)
+print("Thank you for using the sum calculator!")
