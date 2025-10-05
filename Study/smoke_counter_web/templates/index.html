@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smoke Counter</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 1.5rem; }
+    header { display: flex; align-items: baseline; gap: 1rem; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .card { border: 1px solid #ddd; border-radius: 8px; padding: 1rem; }
+    .muted { color: #666; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border-bottom: 1px solid #eee; padding: .5rem; text-align: left; }
+    .relapse { color: #b00020; font-weight: bold; }
+    form.inline { display: inline-flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+    input[type="time"], input[type="date"], input[type="number"] { padding: .25rem .5rem; }
+    button { padding: .4rem .7rem; }
+    /* mobile tweaks */
+    @media (max-width: 640px) {
+      body { margin: 1rem; }
+      header { flex-wrap: wrap; gap: .5rem; }
+      .cards { grid-template-columns: 1fr; }
+      table { font-size: .95rem; }
+    }
+    /* floating log button */
+    .fab { position: fixed; right: 1rem; bottom: 1rem; background: #0d6efd; color: white; border-radius: 999px; padding: .9rem 1.1rem; border: none; box-shadow: 0 6px 16px rgba(0,0,0,.2); font-size: 1rem; cursor: pointer; }
+    .legend { display: inline-flex; gap: .5rem; align-items: center; }
+    .swatch { inline-size: 12px; block-size: 12px; border-radius: 2px; display: inline-block; }
+    .heatmap { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+    .heatcell { aspect-ratio: 1 / 1; border-radius: 4px; display: grid; place-items: center; font-size: .75rem; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Smoke Counter</h1>
+    <span class="muted">Data: {{ stats['data_file'] }}</span>
+    <span class="muted" style="margin-left:auto;">
+      {% if pin_required and authed %}<a href="/logout">Logout</a>{% elif pin_required %}<a href="/login">Login</a>{% endif %}
+    </span>
+  </header>
+
+  <section class="cards">
+    <div class="card">
+      <h3>Today</h3>
+      <div>Start: {{ stats['start_date'] }}</div>
+      <div>Goal: {{ stats['daily_goal'] }} / day</div>
+      <div>Current success: {{ stats['current_success_streak_days'] }} days</div>
+      <div>Current streak (since last event): {{ stats['current_streak_days'] }} days</div>
+      <div>Last smoked: {{ stats['last_smoked_at'] }}</div>
+    </div>
+
+    <div class="card">
+      <h3>Totals</h3>
+      <div>Days tracked: {{ stats['days_tracked'] }}</div>
+      <div>Smoke‑free days: {{ stats['smoke_free_days'] }}</div>
+      <div>Success days: {{ stats['success_days'] }} ({{ stats['success_rate'] }}%)</div>
+      <div>Total events: {{ stats['total_events'] }}</div>
+      <div>Weekly best success streak: {{ weekly_best }} days</div>
+    </div>
+
+    <div class="card">
+      <h3>Quick Log</h3>
+      <form method="post" action="/log" class="inline">
+        <label>Date <input type="date" name="date" value="" /></label>
+        <label>Time <input type="time" name="time" value="" /></label>
+        <label><input type="checkbox" name="relapse" /> Relapse</label>
+        <button type="submit">Log</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="cards" style="margin-top:1rem;">
+    <div class="card">
+      <h3>Last 30 days</h3>
+      <canvas id="last30" height="120"></canvas>
+      <div class="legend" style="margin-top:.5rem;">
+        <span class="swatch" style="background:#0d6efd"></span> Events
+        <span class="swatch" style="background:#b00020"></span> Relapses
+      </div>
+    </div>
+    <div class="card">
+      <h3>Monthly heatmap ({{ month_days[0]['iso'][:7] if month_days else '' }})</h3>
+      <div class="heatmap" id="heatmap"></div>
+      <div class="muted" style="margin-top:.5rem;">Darker = more events</div>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:1rem;">
+    <h3>Recent events</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th><th>Time</th><th>Relapse</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d, t, rel in recent %}
+        <tr>
+          <td>{{ d }}</td>
+          <td>{{ t }}</td>
+          <td>{% if rel %}<span class="relapse">Relapse</span>{% else %}-{% endif %}</td>
+          <td>
+            <form method="post" action="/delete" class="inline" onsubmit="return confirm('Delete {{ d }} {{ t }}?')">
+              <input type="hidden" name="date" value="{{ d }}" />
+              <input type="hidden" name="time" value="{{ t }}" />
+              <button type="submit">Delete</button>
+            </form>
+            <form method="post" action="/edit" class="inline">
+              <input type="hidden" name="old_date" value="{{ d }}" />
+              <input type="hidden" name="old_time" value="{{ t }}" />
+              <input type="date" name="date" value="{{ d }}" />
+              <input type="time" name="time" value="{{ t }}" />
+              <label class="inline"><input type="checkbox" name="relapse" {% if rel %}checked{% endif %}/> Relapse</label>
+              <button type="submit">Save</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <p class="muted">Views: <a href="/weekly">Weekly</a> • <a href="/monthly">Monthly</a></p>
+
+  <!-- Floating Log Now button -->
+  <form method="post" action="/log" id="logNowForm">
+    <input type="hidden" name="date" id="nowDate" />
+    <input type="hidden" name="time" id="nowTime" />
+  </form>
+  <button class="fab" onclick="logNow()">Log now</button>
+
+  <script>
+    function pad(n){ return (n<10? '0' : '') + n }
+    function logNow(){
+      const now = new Date();
+      document.getElementById('nowDate').value = now.getFullYear() + '-' + pad(now.getMonth()+1) + '-' + pad(now.getDate());
+      document.getElementById('nowTime').value = pad(now.getHours()) + ':' + pad(now.getMinutes());
+      document.getElementById('logNowForm').submit();
+    }
+    // Chart.js for last 30 days
+    const labels = {{ last30_labels | tojson }};
+    const counts = {{ last30_counts | tojson }};
+    const relapses = {{ last30_relapses | tojson }};
+    const ctx = document.getElementById('last30');
+    if (ctx && window.Chart) {
+      new Chart(ctx, {
+        type: 'bar',
+        data: { labels: labels, datasets: [ { label: 'Events', data: counts, backgroundColor: '#0d6efd' }, { label: 'Relapses', data: relapses, backgroundColor: '#b00020' } ] },
+        options: { responsive: true, scales: { x: { ticks: { maxRotation: 60, minRotation: 60 } }, y: { beginAtZero: true } }, plugins: { legend: { display: true } } }
+      });
+    }
+    // Heatmap grid
+    const monthDays = {{ month_days | tojson }};
+    const monthMax = {{ month_max | tojson }} || 0;
+    const grid = document.getElementById('heatmap');
+    if (grid && monthDays) {
+      // Add empty cells for days before the 1st so Monday aligns left
+      const firstWeekday = monthDays.length ? monthDays[0].weekday : 0;
+      for (let i=0;i<firstWeekday;i++) { const e = document.createElement('div'); e.className='heatcell'; e.style.background='#f5f5f5'; grid.appendChild(e); }
+      monthDays.forEach(d => {
+        const intensity = monthMax ? d.count / monthMax : 0;
+        const color = intensity ? `rgba(13,110,253,${0.15 + 0.75*intensity})` : '#e9ecef';
+        const cell = document.createElement('div'); cell.className = 'heatcell';
+        cell.title = `${d.iso}: ${d.count} events (${d.relapses} relapses)`; cell.style.background = color; cell.textContent = d.day; grid.appendChild(cell);
+      });
+    }
+  </script>
+</body>
+</html>

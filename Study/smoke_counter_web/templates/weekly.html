@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Weekly Summary</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 1.5rem; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border-bottom: 1px solid #eee; padding: .5rem; text-align: left; }
+  </style>
+</head>
+<body>
+  <h2>Weekly summary ({{ summary['week_start'] }}..{{ summary['week_end'] }})</h2>
+  <ul>
+    <li>Daily goal: {{ summary['daily_goal'] }} events/day</li>
+    <li>Total events: {{ summary['events_total'] }}</li>
+    <li>Avg per day: {{ summary['avg_per_day'] }}</li>
+    <li>Smoke‑free days: {{ summary['smoke_free_days'] }}</li>
+    <li>Success days: {{ summary['success_days'] }} ({{ summary['success_rate'] }}%)</li>
+    <li>Best streak (this week): {{ summary['best_streak'] }} days</li>
+  </ul>
+
+  <h3>Daily counts</h3>
+  <table>
+    <thead><tr><th>Date</th><th>Count</th></tr></thead>
+    <tbody>
+      {% for d, c in summary['day_counts'] %}
+      <tr><td>{{ d }}</td><td>{{ c }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p><a href="/weekly.csv">Download CSV</a> • <a href="/">Back</a></p>
+</body>
+</html>

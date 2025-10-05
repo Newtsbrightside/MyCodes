@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 1.5rem; display: grid; place-items: center; }
+    form { border: 1px solid #ddd; padding: 1rem; border-radius: 8px; width: min(360px, 90vw); display: grid; gap: .75rem; }
+    input { padding: .5rem .6rem; }
+    button { padding: .5rem .7rem; }
+    .error { color: #b00020; }
+  </style>
+</head>
+<body>
+  <form method="post" action="/login">
+    <h2>Enter PIN</h2>
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <input type="hidden" name="next" value="{{ next_url }}" />
+    <input type="password" name="pin" placeholder="PIN" required />
+    <button type="submit">Login</button>
+  </form>
+</body>
+</html>

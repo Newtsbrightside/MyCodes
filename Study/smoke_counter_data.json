@@ -1,0 +1,70 @@
+{
+  "start_date": "2025-10-01",
+  "events": {
+    "2025-10-05": [
+      {
+        "time": "10:00",
+        "relapse": true
+      },
+      {
+        "time": "11:44",
+        "relapse": true
+      },
+      {
+        "time": "13:07",
+        "relapse": true
+      }
+    ],
+    "2025-10-04": [
+      {
+        "time": "11:54",
+        "relapse": true
+      },
+      {
+        "time": "15:45",
+        "relapse": true
+      },
+      {
+        "time": "18:05",
+        "relapse": true
+      },
+      {
+        "time": "20:12",
+        "relapse": true
+      }
+    ],
+    "2025-09-29": [
+      {
+        "time": "19:21",
+        "relapse": true
+      },
+      {
+        "time": "22:50",
+        "relapse": true
+      },
+      {
+        "time": "23:24",
+        "relapse": true
+      }
+    ],
+    "2025-09-30": [
+      {
+        "time": "00:24",
+        "relapse": true
+      },
+      {
+        "time": "01:00",
+        "relapse": true
+      },
+      {
+        "time": "01:25",
+        "relapse": true
+      },
+      {
+        "time": "01:37",
+        "relapse": true
+      }
+    ]
+  },
+  "daily_goal": 0
+}
