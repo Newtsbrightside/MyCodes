@@ -13,6 +13,18 @@
       {
         "time": "13:07",
         "relapse": true
+      },
+      {
+        "time": "16:11",
+        "relapse": true
+      },
+      {
+        "time": "22:27",
+        "relapse": true
+      },
+      {
+        "time": "23:57",
+        "relapse": true
       }
     ],
     "2025-10-04": [
@@ -62,6 +74,16 @@
       },
       {
         "time": "01:37",
+        "relapse": true
+      }
+    ],
+    "2025-10-06": [
+      {
+        "time": "18:20",
+        "relapse": true
+      },
+      {
+        "time": "20:17",
         "relapse": true
       }
     ]
